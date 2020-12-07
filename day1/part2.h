@@ -1,7 +1,3 @@
-//
-// Created by me on 12/2/20.
-//
-
 #include "../lib/util.h"
 
 #ifndef AOC2020_PART2_H
