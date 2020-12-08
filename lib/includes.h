@@ -7,6 +7,7 @@
 #include <iterator>
 #include <string>
 #include <vector>
+#include <tuple>
 #include <regex>
 #include <reflex/matcher.h>
 #include <reflex/stdmatcher.h>
