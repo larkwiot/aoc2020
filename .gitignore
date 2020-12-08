@@ -1,4 +1,4 @@
-*
-!*.h
-!*.cc
-!*.txt
+.*
+main
+a.out
+!.gitignore
