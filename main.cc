@@ -1,8 +1,15 @@
 #include "lib/includes.h"
-#include "day1/part2.h"
+#include "day2/part2.h"
 
 int main(int argc, char* argv[]) {
-    if (solve<long>(argv[1], 2020)) {
+    if (argc < 2) {
+        std::cerr << "[!] error: no file given!\n";
+        abort();
+    }
+
+    std::string filename {argv[1]};
+
+    if (solve(filename)) {
         return 0;
     } else {
         return 130;

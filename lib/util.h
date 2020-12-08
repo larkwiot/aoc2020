@@ -18,4 +18,22 @@ std::vector<long> read_file_nums(std::string fn) {
     return nums;
 }
 
+std::vector<std::string> read_file_lines(std::string fn) {
+    std::ifstream fh {fn};
+
+    if (!fh) {
+        std::cerr << "[!] error: could not open " << fn << "\n";
+        abort();
+    }
+
+    auto lines = std::vector<std::string> {};
+
+    std::string l;
+    while (std::getline(fh, l)) {
+        lines.push_back(l);
+    }
+    
+    return lines;
+}
+
 #endif //AOC2020_UTIL_H

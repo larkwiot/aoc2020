@@ -4,7 +4,8 @@
 #define AOC2020_PART2_H
 
 template <typename I>
-bool solve(std::string fn, I target) {
+bool solve(std::string fn) {
+    I target = 2020;
     auto nums = read_file_nums(fn);
     //std::cout << "read " << nums.size() << " lines\n";
     std::sort(nums.begin(), nums.end());
