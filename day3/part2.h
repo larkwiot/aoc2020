@@ -52,7 +52,7 @@ bool solve(std::string fn) {
             x %= width;
         }
 
-        std::cout << "found #" << trees << "\n";
+        std::cout << "[i] found #" << trees << "\n";
         trees_collection.push_back(trees);
     }
 
