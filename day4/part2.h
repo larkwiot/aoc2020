@@ -12,6 +12,16 @@ bool is_passport_valid(std::unordered_map<std::string, std::string> pass) {
         //"cid",
     };
 
+    static std::unordered_set<std::string> eye_colors {
+        "amb",
+        "blu",
+        "brn",
+        "gry",
+        "grn",
+        "hzl",
+        "oth",
+    };
+
     int fields = 0;
 
     for (auto f : required_fields) {
@@ -22,7 +32,65 @@ bool is_passport_valid(std::unordered_map<std::string, std::string> pass) {
     }
     //std::cout << "has " << fields  << "/" << required_fields.size() << " fields\n";
     
-    return fields == required_fields.size();
+    if (fields != required_fields.size()) {
+        return false;
+    }
+
+    // year checks
+    int byr = std::stoi(pass.at("byr"));
+    if (byr > 2002 || byr < 1920) {
+        std::cerr << "invalid byr: " << byr << "\n";
+        return false;
+    }
+    int iyr = std::stoi(pass.at("iyr"));
+    if (iyr > 2020 || iyr < 2010) {
+        std::cerr << "invalid iyr: " << iyr << "\n";
+        return false;
+    }
+    int eyr = std::stoi(pass.at("eyr"));
+    if (eyr > 2030 || eyr < 2020) {
+        std::cerr << "invalid eyr: " << eyr << "\n";
+        return false;
+    }
+
+    reflex::BoostPerlMatcher hgtmatcher("^(\\d+)([a-z]{2})$", pass.at("hgt"));
+    if (hgtmatcher.find() == 0) {
+        std::cerr << "invalid height string: " << pass.at("hgt") << "\n";
+        return false;
+    }
+
+    int hgt = std::stoi(std::string{hgtmatcher[1].first, hgtmatcher[1].second});
+    std::string unit {hgtmatcher[2].first, hgtmatcher[2].second};
+    if (unit != "cm" && unit != "in") {
+        std::cerr << "[!] error: height unit was " << unit << "\n";
+        //std::cerr << "\tline: " << pass.at("hgt") << "\n\theight: " << hgt << "\n";
+        abort();
+    } else if (unit == "cm" && (hgt < 150 || hgt > 193)) {
+        std::cerr << "invalid hgt: " << hgt << "\n";
+        return false;
+    } else if (unit == "in" && (hgt < 59 || hgt > 76)) {
+        std::cerr << "invalid hgt: " << hgt << "\n";
+        return false;
+    }
+
+    if (!eye_colors.contains(pass.at("ecl"))) {
+        std::cerr << "invalid ecl: " << pass.at("ecl") << "\n";
+        return false;
+    }
+
+    reflex::BoostPerlMatcher pid_matcher("^\\d{9}$", pass.at("pid"));
+    if (pid_matcher.find() == 0) {
+        std::cerr << "invalid pid: " << pass.at("pid") << "\n";
+        return false;
+    }
+
+    reflex::BoostPerlMatcher hair_matcher("^#[a-f0-9]{6}$", pass.at("hcl"));
+    if (hair_matcher.find() == 0) {
+        std::cerr << "invalid hcl: " << pass.at("hcl") << "\n";
+        return false;
+    }
+
+    return true;
 }
 
 bool solve(std::string fn) {
@@ -39,6 +107,9 @@ bool solve(std::string fn) {
             new_lines.emplace_back(new_line);
             new_line = "";
         }
+    }
+    if (new_line != "") {
+        new_lines.emplace_back(new_line);
     }
 
     int valid_passports = 0;
