@@ -1,5 +1,5 @@
 #include "lib/includes.h"
-#include "day5/part1.h"
+#include "day5/part2.h"
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
